@@ -30,6 +30,8 @@ services:
     depends_on:
       - cadvisor
       - pushgateway
+    env_file:
+      - stack.env
     networks:
       - easy-docker-host
     restart: always
@@ -48,6 +50,8 @@ services:
       - '--path.sysfs=/host/sys'
       - --collector.filesystem.ignored-mount-points
       - "^/(sys|proc|dev|host|etc|rootfs/data/docker-internal/containers|rootfs/data/docker-internal/overlay2|rootfs/run/docker/netns|rootfs/data/docker-internal/aufs)($$|/)"
+    env_file:
+      - stack.env      
     ports:
       - 9100
     networks:
@@ -57,6 +61,8 @@ services:
   alertmanager:
     image: prom/alertmanager
     container_name: alertmanager
+    env_file:
+      - stack.env    
     ports:
       - 9093
     volumes:
@@ -71,6 +77,8 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
+    env_file:
+      - stack.env    
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
@@ -85,6 +93,8 @@ services:
   grafana:
     image: grafana/grafana-oss
     container_name: grafana
+    env_file:
+      - stack.env
     user: "472"
     depends_on:
       - prometheus
@@ -101,7 +111,9 @@ services:
 
   pushgateway:
     image: prom/pushgateway
-    container_name: pushgateway    
+    container_name: pushgateway  
+    env_file:
+      - stack.env      
     restart: always
     ports:
       - 9091
