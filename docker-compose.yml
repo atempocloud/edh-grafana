@@ -77,13 +77,18 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor
     container_name: cadvisor
+    privileged: true
     env_file:
-      - stack.env    
+      - stack.env
+    devices:
+      - /dev/kmsg:/dev/kmsg          
     volumes:
       - /:/rootfs:ro
-      - /var/run:/var/run:rw
+      - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /data/docker-internal/:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+      - /cgroup:/cgroup:ro
     ports:
       - 8080
     networks:
